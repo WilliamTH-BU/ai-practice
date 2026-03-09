@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     private float moveForward = 0;
     private float rotateSpeed = 0;
 
-    AudioClip monkeySound;
+    public AudioClip monkeySound;
     AudioSource audioSource;
 
     Rigidbody rb;
@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
         Move();
         Rotate();
         Jump();
+        Sound();
     }
 
     public void Move()
@@ -60,15 +61,23 @@ public class PlayerController : MonoBehaviour
     public void Jump()
     {
         InputAction jumpAction = InputSystem.actions.FindAction("Jump");
-
-        if (jumpAction.WasPressedThisFrame() && isGrounded)
+        Debug.Log($"{jumpAction} {isGrounded}");
+        if (jumpAction.IsPressed() && isGrounded)
         {
             rb.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
             isGrounded = false;
+            Debug.Log($"{jumpAction} {isGrounded}");
+
         }
     }
 
-    
+    public void Sound()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            audioSource.PlayOneShot(monkeySound);
+        }
+    }
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
